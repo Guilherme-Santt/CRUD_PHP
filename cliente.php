@@ -5,7 +5,7 @@ include('conexao.php');
 $sql_clientes   = "SELECT * FROM clientes";
 $query_clientes = $mysqli->query($sql_clientes) or die($mysqli->error);
 $num_clientes   = $query_clientes->num_rows;
-11973541985
+
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +31,7 @@ $num_clientes   = $query_clientes->num_rows;
     }
 </style>
 <body>
+    <a href="http://127.0.0.1/projetoCadastro/cadastrar_cliente.php">Cadastrar cliente</a>
     <h1>Lista de clientes</h1>
     <p>Esses são os clientes cadastrados no seu sistema:</p>
     <table border="1" cellpadding="10">
@@ -56,14 +57,12 @@ $num_clientes   = $query_clientes->num_rows;
 
                     $telefone ="Não informado!";
                     if(!empty($cliente['telefone'])){
-                        $ddd    =  substr($cliente['telefone'], 0 , 2);
-                        $parte1 =  substr($cliente['telefone'], 2 , 4);;
-                        $parte2 =  substr($cliente['telefone'], 7);
-                        $telefone = "($ddd) $parte1-$parte2";
+                        $telefone = formatar_telefone($cliente['telefone']);
                     }
+
                     $nascimento = "Nascimento não informada!";
                     if(!empty($cliente['nascimento'])){
-                        $nascimento = implode('/', array_reverse(explode('-', $cliente['nascimento'])));
+                        $nascimento = formatar_data($cliente['nascimento']);
                     }
                     $data_cadastro = date("d/m/y H:i:s", strtotime($cliente['data']));
             ?>     
