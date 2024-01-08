@@ -1,5 +1,4 @@
 <?php 
-
     function limpar_texto($str){ 
       return preg_replace("/[^0-9]/", "", $str); 
     }
@@ -12,17 +11,17 @@
         $telefone = $_POST['telefone'];
         $nascimento = $_POST['nascimento'];
 
-    // verificação nome
+    // VERIFICAÇÃO SE ESTÁ VAZIO OU 3 Á 100 DÍGITOS
         if(empty($nome) || Strlen($nome) < 3 || Strlen($nome) > 100){
             $erro = "Por favor, Prencha o campo nome corretamente. Capacidade mínima 3 dígitos! ";
         }
 
-    // verificação email
+    // VERIFICAÇÃO SE ESTÁ VAZIO OU SE NÃO ESTÁ NO PADRÃO DE EMAIL
         if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
             $erro = "Por favor, Prencha o campo e-mail corretamente.";
         }   
 
-    // verificação nascimento
+    // SE NÃO ESTIVER VAZIO, FAZER CONVERSÃO PARA PADRÃO AMERICANO
         if(!empty($nascimento)){
             $pedacos = explode('/', $nascimento);
 
@@ -34,7 +33,7 @@
             }
         }    
 
-    // verificação telefone
+    // CASO NÃO TIVER VÁZIO, FAZER CONVERSÃO PARA PADRÃO BR
         if(!empty($telefone)){
             $telefone = limpar_texto($telefone);
             if(strlen($telefone) != 11){
@@ -43,7 +42,7 @@
         }
 
         if($erro){
-            
+
         }
         else{
             $verify = "SELECT email FROM clientes WHERE email = '$email' ";
