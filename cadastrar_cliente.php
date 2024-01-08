@@ -7,7 +7,6 @@ $erro = false;
 
 if(count($_POST) > 0){
     include('conexao.php');
-
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $telefone = $_POST['telefone'];
@@ -59,7 +58,7 @@ if(count($_POST) > 0){
             $deu_certo = $mysqli->query($sqlcode) or die($mysqli->error);
                 if($deu_certo){
                     echo  "<script>alert('Cadastrado com Sucesso!');</script>";
-                        unset($_POST);
+                    unset($_POST);
                 }
         }
     }    
