@@ -47,17 +47,22 @@ if(count($_POST) > 0){
         // echo "<p><b>$erro</b></p>";
     }
     else{
-        $sqlcode = "INSERT INTO clientes (nome, email, telefone, nascimento, data)
-        values ('$nome', '$email', '$telefone', '$nascimento', NOW())";
-        $deu_certo = $mysqli->query($sqlcode) or die($mysqli->error);
+        $verify = "SELECT email FROM clientes WHERE email = '$email' ";
+        $query_verify = $mysqli->query($verify);
+        $query_verify = $query_verify->num_rows;
 
-        if($deu_certo){
-            echo "<p><b>Cliente cadastrado com sucesso!</b></p>";
-            unset($_POST);
+        if($query_verify){
+            echo  "<script>alert('Email ja cadastrado!');</script>";
+        }else{
+            $sqlcode = "INSERT INTO clientes (nome, email, telefone, nascimento, data)
+            values ('$nome', '$email', '$telefone', '$nascimento', NOW())";
+            $deu_certo = $mysqli->query($sqlcode) or die($mysqli->error);
+                if($deu_certo){
+                    echo  "<script>alert('Cadastrado com Sucesso!');</script>";
+                        unset($_POST);
+                }
         }
-        
-    }
-
+    }    
 }
 
 ?>

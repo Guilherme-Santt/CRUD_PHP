@@ -1,9 +1,21 @@
 <?php
-
+// FUNÇÃO FORMATAR DATA DO PADRÃO AMERICANO PARA O PADRÃO BRASILEIRO
+function formatar_data($data){
+    return implode('/', array_reverse(explode('-', $data)));
+};
+// FORMATAR TELEFONE PARA VISUALIZAÇÃO COM CARACTERES
+function formatar_telefone($telefone){
+    $ddd = substr ($telefone, 0, 2);
+    $parte1 = substr ($telefone, 2, 5);
+    $parte2 = substr ($telefone, 7);
+    return "($ddd) $parte1-$parte2";
+}
 include('conexao.php');
-
+// COMANDO SQL PARA CONSULTAR CLIENTES
 $sql_clientes   = "SELECT * FROM clientes";
+// COMANDO QUERY, PARA EXECUTAR COMANDO SQL
 $query_clientes = $mysqli->query($sql_clientes) or die($mysqli->error);
+// COMANDO NUM ROWS, PARA CONTAR QUANTIDADE DADOS NO BANCO
 $num_clientes   = $query_clientes->num_rows;
 
 ?>
@@ -46,20 +58,22 @@ $num_clientes   = $query_clientes->num_rows;
         </thead>
         <tbody> 
             <?php 
+            // SE O NUMERO DE CLIENTES INSERIDOS FOR IGUAL A 0, INSERIR MENSAGEM 
                 if($num_clientes == 0) { 
             ?> 
                     <tr>
                         <td colspan="7">Nenhum cliente foi cadastrado</td>
                     </tr>
             <?php }
+            // SE NÃO(SE TIVER DADOS INSERIDOS)MOSTRA-LOS
                 else{ 
                     while($cliente = $query_clientes->fetch_assoc()){
-
+            // SE O TELEFONE FOR INFORMADO, UTILIZAR FUNÇÃO PARA ALTERAR PARA PADRÃO BRASILEIRO. CASO NÃO, MOSTRAR NÃO INFORMADO
                     $telefone ="Não informado!";
                     if(!empty($cliente['telefone'])){
-                        $telefone = formatar_telefone($cliente['telefone']);
+                        $telefone = formatar_telefone($cliente['telefone']);   
                     }
-
+            // SE A DATA DE NASCIMENTO FOR INFORMADA, MOSTRAR MENSAGEM FORMATADA NO PADRÃO BR
                     $nascimento = "Nascimento não informada!";
                     if(!empty($cliente['nascimento'])){
                         $nascimento = formatar_data($cliente['nascimento']);
@@ -70,8 +84,8 @@ $num_clientes   = $query_clientes->num_rows;
                         <td><?php echo $cliente['id']?>     </td>
                         <td><?php echo $cliente['nome']?>   </td>
                         <td><?php echo $cliente['email']?>  </td>
-                        <td><?php echo $telefone; ?>        </td>
-                        <td><?php echo $nascimento;?>       </td>
+                        <td><?php echo $telefone; ?>  </td>
+                        <td><?php echo $nascimento ?>   </td>
                         <td><?php echo $data_cadastro;?>    </td>
                         <td>
                             <a class="edit" href="editar_cliente.php?id=<?php echo $cliente['id']?>">Editar</a>
