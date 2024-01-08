@@ -1,68 +1,68 @@
 <?php 
-function limpar_texto($str){ 
-  return preg_replace("/[^0-9]/", "", $str); 
-}
 
-$erro = false;
-
-if(count($_POST) > 0){
-    include('conexao.php');
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-    $telefone = $_POST['telefone'];
-    $nascimento = $_POST['nascimento'];
-
-// verificação nome
-    if(empty($nome) || Strlen($nome) < 3 || Strlen($nome) > 100){
-        $erro = "Por favor, Prencha o campo nome corretamente. Capacidade mínima 3 dígitos! ";
+    function limpar_texto($str){ 
+      return preg_replace("/[^0-9]/", "", $str); 
     }
 
-// verificação email
-    if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $erro = "Por favor, Prencha o campo e-mail corretamente.";
-    }   
+    $erro = false;
+    if(count($_POST) > 0){
+        include('conexao.php');
+        $nome = $_POST['nome'];
+        $email = $_POST['email'];
+        $telefone = $_POST['telefone'];
+        $nascimento = $_POST['nascimento'];
 
-// verificação nascimento
-    if(!empty($nascimento)){
-         $pedacos = explode('/', $nascimento);
-
-         if(count($pedacos) == 3){
-         $nascimento = implode ('-', array_reverse($pedacos)); 
-         }
-         else{
-             $erro = "A data de nascimento deve ser preenchido no padrão dia/mes/ano";
+    // verificação nome
+        if(empty($nome) || Strlen($nome) < 3 || Strlen($nome) > 100){
+            $erro = "Por favor, Prencha o campo nome corretamente. Capacidade mínima 3 dígitos! ";
         }
-    }    
 
-// verificação telefone
-    if(!empty($telefone)){
-        $telefone = limpar_texto($telefone);
-        if(strlen($telefone) != 11){
-            $erro = "O telefone deve ser preenchido no padrão (11) 98888-8888";
+    // verificação email
+        if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $erro = "Por favor, Prencha o campo e-mail corretamente.";
+        }   
+
+    // verificação nascimento
+        if(!empty($nascimento)){
+            $pedacos = explode('/', $nascimento);
+
+            if(count($pedacos) == 3){
+                $nascimento = implode ('-', array_reverse($pedacos)); 
+            }
+            else{
+                $erro = "A data de nascimento deve ser preenchido no padrão dia/mes/ano";
+            }
+        }    
+
+    // verificação telefone
+        if(!empty($telefone)){
+            $telefone = limpar_texto($telefone);
+            if(strlen($telefone) != 11){
+                $erro = "O telefone deve ser preenchido no padrão (11) 98888-8888";
+            }
         }
+
+        if($erro){
+            
+        }
+        else{
+            $verify = "SELECT email FROM clientes WHERE email = '$email' ";
+            $query_verify = $mysqli->query($verify);
+            $query_verify = $query_verify->num_rows;
+
+            if($query_verify){
+                echo  "<script>alert('Email ja cadastrado!');</script>";
+            }else{
+                $sqlcode = "INSERT INTO clientes (nome, email, telefone, nascimento, data)
+                values ('$nome', '$email', '$telefone', '$nascimento', NOW())";
+                $deu_certo = $mysqli->query($sqlcode) or die($mysqli->error);
+                    if($deu_certo){
+                        echo  "<script>alert('Cadastrado com Sucesso!');</script>";
+                        unset($_POST);
+                    }
+            }
+        }    
     }
-
-    if($erro){
-        // echo "<p><b>$erro</b></p>";
-    }
-    else{
-        $verify = "SELECT email FROM clientes WHERE email = '$email' ";
-        $query_verify = $mysqli->query($verify);
-        $query_verify = $query_verify->num_rows;
-
-        if($query_verify){
-            echo  "<script>alert('Email ja cadastrado!');</script>";
-        }else{
-            $sqlcode = "INSERT INTO clientes (nome, email, telefone, nascimento, data)
-            values ('$nome', '$email', '$telefone', '$nascimento', NOW())";
-            $deu_certo = $mysqli->query($sqlcode) or die($mysqli->error);
-                if($deu_certo){
-                    echo  "<script>alert('Cadastrado com Sucesso!');</script>";
-                    unset($_POST);
-                }
-        }
-    }    
-}
 
 ?>
 <!DOCTYPE html>
